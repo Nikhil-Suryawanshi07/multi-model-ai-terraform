@@ -1,0 +1,23 @@
+FROM python:3.14-slim
+
+WORKDIR /app
+
+ENV PYTHONUNBUFFERED=1
+ENV HF_HOME=/model-cache
+
+RUN pip install --no-cache-dir \
+    --index-url https://download.pytorch.org/whl/cpu \
+    torch==2.14.1+cpu
+
+RUN pip install --no-cache-dir \
+    transformers==5.19.0 \
+    fastapi==0.143.0 \
+    uvicorn==0.54.0 \
+    python-multipart \
+    pillow
+
+COPY main_image.py .
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main_image:app", "--host", "0.0.0.0", "--port", "8000"]
